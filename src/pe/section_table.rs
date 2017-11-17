@@ -1,6 +1,8 @@
 use scroll::{self, Pread};
 use error;
 
+use pe::characteristic::SectionCharacteristics;
+
 #[repr(C)]
 #[derive(Debug, PartialEq, Copy, Clone, Default)]
 pub struct SectionTable {
@@ -13,7 +15,7 @@ pub struct SectionTable {
     pub pointer_to_linenumbers: u32,
     pub number_of_relocations: u16,
     pub number_of_linenumbers: u16,
-    pub characteristics: u32,
+    pub characteristics: SectionCharacteristics,
 }
 
 pub const SIZEOF_SECTION_TABLE: usize = 8 * 5;
@@ -34,7 +36,8 @@ impl SectionTable {
         table.pointer_to_linenumbers = bytes.gread_with(offset, scroll::LE)?;
         table.number_of_relocations = bytes.gread_with(offset, scroll::LE)?;
         table.number_of_linenumbers = bytes.gread_with(offset, scroll::LE)?;
-        table.characteristics = bytes.gread_with(offset, scroll::LE)?;
+        table.characteristics = SectionCharacteristics::from_bits(bytes.gread_with(offset, scroll::LE)?)
+            .expect("failed to interpret section characteristics, but bitflags are exhaustive!");
         Ok(table)
     }
     pub fn name(&self) -> error::Result<&str> {
