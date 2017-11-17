@@ -93,6 +93,29 @@ pub const MAGIC_32: u16 = 0x10b;
 /// Standard fields magic number for 64-bit binary
 pub const MAGIC_64: u16 = 0x20b;
 
+#[allow(non_camel_case_types)]
+#[repr(u16)]
+pub enum WindowsSubsystem {
+    IMAGE_SUBSYSTEM_UNKNOWN = 0,
+    IMAGE_SUBSYSTEM_NATIVE = 1,
+    IMAGE_SUBSYSTEM_WINDOWS_GUI = 2,
+    IMAGE_SUBSYSTEM_WINDOWS_CUI = 3,
+    // 4
+    IMAGE_SUBSYSTEM_OS2_CUI = 5,
+    // 6
+    IMAGE_SUBSYSTEM_POSIX_CUI = 7,
+    IMAGE_SUBSYSTEM_NATIVE_WINDOWS = 8,
+    IMAGE_SUBSYSTEM_WINDOWS_CE_GUI = 9,
+    IMAGE_SUBSYSTEM_EFI_APPLICATION = 10,
+    IMAGE_SUBSYSTEM_EFI_BOOT_SERVICE_DRIVER = 11,
+    IMAGE_SUBSYSTEM_EFI_RUNTIME_DRIVER = 12,
+    IMAGE_SUBSYSTEM_EFI_ROM = 13,
+    IMAGE_SUBSYSTEM_XBOX = 14,
+    // 15
+    IMAGE_SUBSYSTEM_WINDOWS_BOOT_APPLICATION = 16,
+    //_Other(u16),
+}
+
 /// Windows specific fields
 #[repr(C)]
 #[derive(Debug, PartialEq, Copy, Clone, Default)]
