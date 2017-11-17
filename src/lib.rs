@@ -80,6 +80,8 @@
 
 #![cfg_attr(not(feature = "std"), no_std)]
 
+#[macro_use]
+extern crate bitflags;
 extern crate plain;
 extern crate scroll;
 

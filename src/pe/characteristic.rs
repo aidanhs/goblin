@@ -73,27 +73,55 @@ let show_type characteristics =
   else "MANY"                   (* print all *)
  */
 
-pub const IMAGE_FILE_RELOCS_STRIPPED: u16 = 0x0001;
-pub const IMAGE_FILE_EXECUTABLE_IMAGE: u16 = 0x0002;
-pub const IMAGE_FILE_LINE_NUMS_STRIPPED: u16 = 0x0004;
-pub const IMAGE_FILE_LOCAL_SYMS_STRIPPED: u16 = 0x0008;
-pub const IMAGE_FILE_AGGRESSIVE_WS_TRIM: u16 = 0x0010;
-pub const IMAGE_FILE_LARGE_ADDRESS_AWARE: u16 = 0x0020;
-pub const RESERVED: u16 = 0x0040;
-pub const IMAGE_FILE_BYTES_REVERSED_LO: u16 = 0x0080;
-pub const IMAGE_FILE_32BIT_MACHINE: u16 = 0x0100;
-pub const IMAGE_FILE_DEBUG_STRIPPED: u16 = 0x0200;
-pub const IMAGE_FILE_REMOVABLE_RUN_FROM_SWAP: u16 = 0x0400;
-pub const IMAGE_FILE_NET_RUN_FROM_SWAP: u16 = 0x0800;
-pub const IMAGE_FILE_SYSTEM: u16 = 0x1000;
-pub const IMAGE_FILE_DLL: u16 = 0x2000;
-pub const IMAGE_FILE_UP_SYSTEM_ONLY: u16 = 0x4000;
-pub const IMAGE_FILE_BYTES_REVERSED_HI: u16 = 0x8000;
-
-pub fn is_dll(characteristics: u16) -> bool {
-  characteristics & IMAGE_FILE_DLL == IMAGE_FILE_DLL
+macro_rules! rex {
+    ($a:ident, $b:ident) => {
+        pub const $b: $a = $a::$b;
+    };
 }
 
-pub fn is_exe(characteristics: u16) -> bool {
-  characteristics & IMAGE_FILE_EXECUTABLE_IMAGE == IMAGE_FILE_EXECUTABLE_IMAGE
+rex!(Characteristics, IMAGE_FILE_RELOCS_STRIPPED);
+rex!(Characteristics, IMAGE_FILE_EXECUTABLE_IMAGE);
+rex!(Characteristics, IMAGE_FILE_LINE_NUMS_STRIPPED);
+rex!(Characteristics, IMAGE_FILE_LOCAL_SYMS_STRIPPED);
+rex!(Characteristics, IMAGE_FILE_AGGRESSIVE_WS_TRIM);
+rex!(Characteristics, IMAGE_FILE_LARGE_ADDRESS_AWARE);
+rex!(Characteristics, _IMAGE_FILE_RESERVED);
+rex!(Characteristics, IMAGE_FILE_BYTES_REVERSED_LO);
+rex!(Characteristics, IMAGE_FILE_32BIT_MACHINE);
+rex!(Characteristics, IMAGE_FILE_DEBUG_STRIPPED);
+rex!(Characteristics, IMAGE_FILE_REMOVABLE_RUN_FROM_SWAP);
+rex!(Characteristics, IMAGE_FILE_NET_RUN_FROM_SWAP);
+rex!(Characteristics, IMAGE_FILE_SYSTEM);
+rex!(Characteristics, IMAGE_FILE_DLL);
+rex!(Characteristics, IMAGE_FILE_UP_SYSTEM_ONLY);
+rex!(Characteristics, IMAGE_FILE_BYTES_REVERSED_HI);
+
+bitflags! {
+    #[derive(Default)]
+    pub struct Characteristics: u16 {
+        const IMAGE_FILE_RELOCS_STRIPPED = 0x0001;
+        const IMAGE_FILE_EXECUTABLE_IMAGE = 0x0002;
+        const IMAGE_FILE_LINE_NUMS_STRIPPED = 0x0004;
+        const IMAGE_FILE_LOCAL_SYMS_STRIPPED = 0x0008;
+        const IMAGE_FILE_AGGRESSIVE_WS_TRIM = 0x0010;
+        const IMAGE_FILE_LARGE_ADDRESS_AWARE = 0x0020;
+        const _IMAGE_FILE_RESERVED = 0x0040;
+        const IMAGE_FILE_BYTES_REVERSED_LO = 0x0080;
+        const IMAGE_FILE_32BIT_MACHINE = 0x0100;
+        const IMAGE_FILE_DEBUG_STRIPPED = 0x0200;
+        const IMAGE_FILE_REMOVABLE_RUN_FROM_SWAP = 0x0400;
+        const IMAGE_FILE_NET_RUN_FROM_SWAP = 0x0800;
+        const IMAGE_FILE_SYSTEM = 0x1000;
+        const IMAGE_FILE_DLL = 0x2000;
+        const IMAGE_FILE_UP_SYSTEM_ONLY = 0x4000;
+        const IMAGE_FILE_BYTES_REVERSED_HI = 0x8000;
+    }
+}
+
+pub fn is_dll(characteristics: Characteristics) -> bool {
+  characteristics.contains(Characteristics::IMAGE_FILE_DLL)
+}
+
+pub fn is_exe(characteristics: Characteristics) -> bool {
+  characteristics.contains(Characteristics::IMAGE_FILE_EXECUTABLE_IMAGE)
 }

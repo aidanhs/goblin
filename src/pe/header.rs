@@ -1,6 +1,7 @@
 use error;
 
 use pe::optional_header;
+use pe::characteristic::Characteristics;
 use scroll::{self, Pread};
 
 /// DOS header present in all PE binaries
@@ -37,7 +38,7 @@ pub struct CoffHeader {
     pub pointer_to_symbol_table: u32,
     pub number_of_symbols: u32,
     pub size_of_optional_header: u16,
-    pub characteristics: u16,
+    pub characteristics: Characteristics,
 }
 
 pub const SIZEOF_COFF_HEADER: usize = 24;
@@ -56,7 +57,8 @@ impl CoffHeader {
         coff.pointer_to_symbol_table = bytes.gread_with(offset, scroll::LE)?;
         coff.number_of_symbols = bytes.gread_with(offset, scroll::LE)?;
         coff.size_of_optional_header = bytes.gread_with(offset, scroll::LE)?;
-        coff.characteristics = bytes.gread_with(offset, scroll::LE)?;
+        coff.characteristics = Characteristics::from_bits(bytes.gread_with(offset, scroll::LE)?)
+            .expect("failed to interpret characteristics, but bitflags are exhaustive!");
         Ok(coff)
     }
 }
