@@ -35,7 +35,7 @@ pub struct CoffHeader {
     pub number_of_sections: u16,
     pub time_date_stamp: u32,
     pub pointer_to_symbol_table: u32,
-    pub number_of_symbol_table: u32,
+    pub number_of_symbols: u32,
     pub size_of_optional_header: u16,
     pub characteristics: u16,
 }
@@ -54,7 +54,7 @@ impl CoffHeader {
         coff.number_of_sections = bytes.gread_with(offset, scroll::LE)?;
         coff.time_date_stamp = bytes.gread_with(offset, scroll::LE)?;
         coff.pointer_to_symbol_table = bytes.gread_with(offset, scroll::LE)?;
-        coff.number_of_symbol_table = bytes.gread_with(offset, scroll::LE)?;
+        coff.number_of_symbols = bytes.gread_with(offset, scroll::LE)?;
         coff.size_of_optional_header = bytes.gread_with(offset, scroll::LE)?;
         coff.characteristics = bytes.gread_with(offset, scroll::LE)?;
         Ok(coff)
